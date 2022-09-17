@@ -1,0 +1,509 @@
+<section
+  id="MainProduct-{{ section.id }}"
+  class="page-width section-{{ section.id }}-padding"
+  data-section="{{ section.id }}"
+>
+  {{ "section-product.css" | asset_url | stylesheet_tag }}
+  {{ "section-main-product.css" | asset_url | stylesheet_tag }}
+  {{ "component-accordion.css" | asset_url | stylesheet_tag }}
+  {{ "component-price.css" | asset_url | stylesheet_tag }}
+  {{ "component-rte.css" | asset_url | stylesheet_tag }}
+  {{ "component-slider.css" | asset_url | stylesheet_tag }}
+  {{ "component-rating.css" | asset_url | stylesheet_tag }}
+  {{ "component-loading-overlay.css" | asset_url | stylesheet_tag }}
+  {{ "component-deferred-media.css" | asset_url | stylesheet_tag }}
+
+  {%- style -%} .section-{{ section.id }}-padding { padding-top:
+  {{ section.settings.padding_top | times: 0.75 | round: 0 }}px; padding-bottom:
+  {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px; } @media
+  screen and (min-width: 750px) { .section-{{ section.id }}-padding {
+  padding-top: {{ section.settings.padding_top }}px; padding-bottom:
+  {{ section.settings.padding_bottom }}px; } } {%- endstyle -%}
+
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+  {%- assign first_3d_model = product.media | where: "media_type", "model" |
+  first -%} {%- if first_3d_model -%}
+  {{ "component-product-model.css" | asset_url | stylesheet_tag }}
+  <link
+    id="ModelViewerStyle"
+    rel="stylesheet"
+    href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+    media="print"
+    onload="this.media='all'"
+  />
+  <link
+    id="ModelViewerOverride"
+    rel="stylesheet"
+    href="{{ 'component-model-viewer-ui.css' | asset_url }}"
+    media="print"
+    onload="this.media='all'"
+  />
+  {%- endif -%}
+
+  <div class="container">
+    <div class="product-container">
+      <div class="item-gallery">
+        <!-- <img src="{{ 'quality.svg' | asset_url }}" alt="s">
+        {{ images['NEORIC_ZITRONE_HELL_1298X_0F36856E-D4A0-43AB-8874-8D7CF02B6DA3.jpg'] | image_url: width: 300 | image_tag }}
+      
+        {{ product.featured_image | img_url: '600x600' | img_tag: product.featured_image.alt }}
+
+        {% assign imagey = product.images | where: "alt", "main-image" %}
+
+  {{ imagey }} -->
+
+        <div class="thumbs">
+          {% for image in product.images %}
+          <img
+            onclick="toggleVisible('{{ image.id }}')"
+            class="thumb"
+            src="{{ image.src | img_url: '100x100' }}"
+            alt="{{ image.alt | escape }}"
+          />
+          {% endfor %}
+
+          <script>
+            var myVar = "{{ product.images }}";
+            const myArr = myVar.split(".jpg");
+            console.log(myArr);
+          </script>
+        </div>
+        <div class="current">
+          {% for image in product.images %}
+
+          <img
+            class="current-image"
+            id="{{ image.id }}"
+            src="{{ image.src | img_url: '300x300' }}"
+            alt="{{ image.alt | escape }}"
+          />
+          {% endfor %}
+          <script>
+            const toggleVisible = async id => {
+              await Array.from(
+                document.getElementsByClassName("current-image")
+              ).forEach(function (element) {
+                element.style.zIndex = "0";
+              });
+              document.getElementById(`${id}`).style.zIndex = "10";
+            };
+          </script>
+        </div>
+      </div>
+      <div class="add-item">
+        <h3>{{ product.title }}</h3>
+        <h5>{{ product.description }}</h5>
+        <h4>
+          <span class="price">24.99€</span><span class="reduced">19.99€</span>
+          <span class="mws">inkl. MwSt.</span>
+        </h4>
+        <div class="stock">
+          <span class="stock-status"></span>
+          <h6>Auf Lager, in 2-3 Tagen bei dir</h6>
+        </div>
+        <button class="button">In den Einkaufswagen</button>
+      </div>
+    </div>
+    <div class="quality-container">
+      <div class="quality-item">
+        <svg
+          width="97"
+          height="132"
+          viewBox="0 0 97 132"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M40.6794 3.25C38.3224 5.038 35.3114 7.225 33.9874 8.112C32.6634 8.999 28.8884 10.005 25.5984 10.349C22.3074 10.693 18.3434 11.632 16.7884 12.436C15.2344 13.24 13.2764 14.945 12.4384 16.224C11.5994 17.504 10.5844 21.831 10.1814 25.839C9.52137 32.411 9.05837 33.58 5.47237 37.723C3.28437 40.251 1.06437 43.45 0.538369 44.833C0.0133688 46.216 -0.157631 48.53 0.159369 49.974C0.477369 51.419 2.71337 55.011 5.13037 57.957C9.17537 62.889 9.57937 63.901 10.2184 70.728C10.7574 76.474 11.4614 78.793 13.3494 81.037C14.8154 82.778 17.2564 84.225 19.4754 84.668C21.5054 85.074 23.5744 85.29 24.0734 85.15C24.5734 85.009 25.3194 85.44 25.7324 86.108C26.1444 86.775 26.0704 88.036 25.5674 88.911C25.0644 89.785 23.2664 93.875 21.5704 98C19.8744 102.125 17.1774 108.791 15.5764 112.814C13.9754 116.836 12.6654 120.774 12.6654 121.564C12.6654 122.354 13.3884 123 14.2714 123C15.1544 123 18.6294 122.287 21.9924 121.415C25.3564 120.544 28.2384 120.206 28.3974 120.665C28.5554 121.124 30.0564 123.891 31.7314 126.813C33.7184 130.278 35.3324 132.016 36.3754 131.813C37.2754 131.636 39.2534 128.448 40.9094 124.5C42.5244 120.65 44.7454 115.25 45.8434 112.5C46.9424 109.75 48.9264 105.124 50.2534 102.22C51.5804 99.317 52.6654 96.584 52.6654 96.147C52.6654 95.711 54.9764 93.474 57.8004 91.177C60.6244 88.88 63.7324 87 64.7064 87C65.9804 87 67.3634 89.181 69.6214 94.75C71.3494 99.013 73.8754 104.853 75.2354 107.73C76.5954 110.606 77.9924 114.385 78.3404 116.127C78.9614 119.228 78.9134 119.277 76.0694 118.466C74.4724 118.01 71.5904 117.606 69.6654 117.568C66.4834 117.506 65.9384 117.931 63.6654 122.247C62.2904 124.858 60.9134 126.996 60.6064 126.997C60.2984 126.999 58.5254 123.4 56.6654 119C54.8054 114.6 52.6944 111 51.9744 111C51.2544 111 50.6654 111.624 50.6654 112.388C50.6654 113.151 51.9484 116.638 53.5164 120.138C55.0844 123.637 56.8744 127.738 57.4944 129.25C58.1154 130.762 59.2984 132 60.1234 132C60.9494 132 62.9794 129.637 64.6354 126.75C66.2904 123.863 67.7754 121.124 67.9334 120.665C68.0924 120.206 70.9744 120.544 74.3384 121.415C77.7014 122.287 81.1764 123 82.0594 123C82.9424 123 83.6514 122.213 83.6344 121.25C83.6174 120.287 81.7964 115.225 79.5874 110C77.3784 104.775 74.6324 98.025 73.4854 95C72.3384 91.975 70.9874 88.978 70.4834 88.339C69.9024 87.601 70.0414 86.882 70.8664 86.364C71.5814 85.917 73.1954 85.409 74.4534 85.236C75.7124 85.063 77.8494 84.5 79.2034 83.986C80.5574 83.471 82.5094 81.661 83.5414 79.963C84.6004 78.222 85.7164 73.856 86.1014 69.95C86.7204 63.674 87.1914 62.547 91.1214 57.943C93.5074 55.148 95.6674 51.768 95.9234 50.431C96.1794 49.094 96.1794 46.906 95.9234 45.569C95.6674 44.232 93.5164 40.863 91.1434 38.082C87.2804 33.557 86.7534 32.316 86.1204 26.263C85.7324 22.543 84.7884 18.27 84.0224 16.767C83.2574 15.264 81.3814 13.387 79.8534 12.597C78.3254 11.807 73.8804 10.718 69.9744 10.177C63.7094 9.309 62.2094 8.652 57.2304 4.596C53.0564 1.196 50.7254 0 48.2764 0C46.0864 0 43.5144 1.101 40.6794 3.25ZM54.6514 6.25C57.0084 8.038 60.0434 10.24 61.3954 11.144C62.7484 12.048 66.8154 13.104 70.4344 13.492C74.0534 13.879 77.6274 14.432 78.3764 14.719C79.1264 15.007 80.3974 16.515 81.2024 18.072C82.0074 19.628 82.6654 22.962 82.6654 25.482C82.6654 28.002 83.2784 31.512 84.0274 33.282C84.7764 35.052 86.3974 37.399 87.6294 38.498C88.8624 39.596 90.4994 41.711 91.2674 43.198C92.0364 44.684 92.6654 47.098 92.6654 48.562C92.6654 50.199 91.1394 53.045 88.6974 55.962C86.5154 58.568 84.2654 61.922 83.6974 63.416C83.1294 64.909 82.6654 68.148 82.6654 70.615C82.6654 73.081 82.0074 76.372 81.2024 77.928C80.3974 79.485 78.9724 81.052 78.0354 81.412C77.0974 81.771 73.5934 82.334 70.2484 82.661C66.9024 82.988 62.7734 84.092 61.0724 85.113C59.3714 86.134 56.2714 88.326 54.1844 89.985C52.0974 91.643 49.4314 93 48.2584 93C47.0854 93 43.4354 90.968 40.1454 88.485C36.8564 86.002 33.2654 83.775 32.1654 83.538C31.0654 83.3 27.6904 82.831 24.6654 82.496C21.6404 82.161 18.4514 81.35 17.5784 80.693C16.7064 80.037 15.4684 78.517 14.8284 77.316C14.1894 76.114 13.6654 73.411 13.6654 71.309C13.6654 69.207 13.2414 66.008 12.7234 64.201C12.2044 62.394 9.95437 58.734 7.72337 56.069C4.68737 52.444 3.66537 50.347 3.66537 47.748C3.66537 45.472 4.46337 43.449 5.97637 41.886C7.24737 40.574 9.30537 38.034 10.5494 36.243C11.9994 34.155 12.9934 30.926 13.3194 27.243C13.5984 24.084 14.3024 20.245 14.8834 18.712C15.4644 17.178 16.6654 15.537 17.5524 15.065C18.4394 14.592 22.1604 13.887 25.8204 13.497C29.4814 13.106 33.5824 12.048 34.9354 11.144C36.2874 10.24 39.3224 8.038 41.6794 6.25C44.0374 4.462 46.9554 3 48.1654 3C49.3754 3 52.2934 4.462 54.6514 6.25ZM44.3604 17.7C43.3674 17.957 42.7274 18.693 42.9394 19.334C43.1584 19.998 46.3284 20.737 50.3034 21.05C54.9254 21.415 58.4464 22.323 60.7244 23.737C62.6174 24.913 65.8224 27.59 67.8474 29.687C69.8724 31.784 72.4604 35.879 73.5974 38.787C74.7344 41.695 75.6654 45.841 75.6654 48C75.6654 50.159 74.7134 54.469 73.5504 57.577C72.3044 60.908 69.7984 64.867 67.4494 67.216C65.2574 69.408 61.3714 72.134 58.8144 73.275C55.7184 74.655 52.1614 75.332 48.1654 75.3C44.7614 75.272 40.4344 74.498 38.1654 73.51C35.9654 72.551 32.4854 70.438 30.4334 68.814C28.1724 67.024 25.5114 63.367 23.6834 59.537C21.5524 55.072 20.6654 51.721 20.6654 48.136C20.6654 44.985 21.5534 41.048 23.0054 37.765C24.2934 34.855 26.7904 31.029 28.5554 29.264C30.3204 27.498 33.0924 25.27 34.7154 24.312C36.3374 23.353 37.6654 22.242 37.6654 21.843C37.6654 21.444 37.2954 20.89 36.8434 20.61C36.3914 20.331 34.7044 20.782 33.0934 21.612C31.4834 22.442 28.6434 24.557 26.7834 26.311C24.9234 28.065 22.1114 32.303 20.5334 35.728C18.3794 40.406 17.6654 43.46 17.6654 48C17.6654 52.51 18.3854 55.624 20.5044 60.272C22.2534 64.109 25.0974 68.106 27.9094 70.683C30.8154 73.346 34.3934 75.436 37.7524 76.433C40.6544 77.295 45.3704 78 48.2324 78C51.0944 78 55.7604 77.249 58.6004 76.332C61.4684 75.406 65.8204 72.855 68.3844 70.599C71.3864 67.956 73.9934 64.348 75.8344 60.289C77.9334 55.659 78.6654 52.494 78.6654 48.05C78.6654 43.801 77.9224 40.375 76.1134 36.279C74.7094 33.1 72.1224 28.998 70.3634 27.162C68.6044 25.327 65.3654 22.896 63.1654 21.76C60.9654 20.624 56.9154 19.094 54.1654 18.359C51.4154 17.625 48.4904 17.071 47.6654 17.128C46.8404 17.185 45.3534 17.443 44.3604 17.7ZM50.2254 42C45.7174 46.4 41.5814 50 41.0344 50C40.4874 50 38.7464 48.65 37.1654 47C35.5844 45.35 33.5454 44 32.6334 44C31.7214 44 30.2304 44.823 29.3204 45.829C28.4104 46.835 27.6654 48.761 27.6654 50.11C27.6654 51.771 29.5314 54.409 33.4444 58.281C37.2084 62.006 40.0504 64 41.5934 64C43.2634 64 47.1724 60.839 54.8144 53.308C63.3944 44.853 65.6654 42.04 65.6654 39.864C65.6654 38.155 64.8234 36.524 63.4424 35.557C62.2204 34.701 60.5904 34 59.8204 34C59.0504 34 54.7324 37.6 50.2254 42ZM62.6654 39.542C62.6654 40.39 58.1464 45.565 52.6234 51.042C47.1004 56.519 42.0534 61 41.4074 61C40.7624 61 38.0814 58.879 35.4494 56.288C32.8184 53.696 30.6654 50.771 30.6654 49.788C30.6654 48.728 31.4034 48 32.4784 48C33.4754 48 35.5844 49.35 37.1654 51C38.7464 52.65 40.7534 54 41.6264 54C42.4984 54 46.7914 50.4 51.1654 46C55.5394 41.6 59.9164 38 60.8924 38C61.8674 38 62.6654 38.694 62.6654 39.542ZM37.8204 90.645C40.2104 92.65 43.6674 94.922 45.5034 95.695C47.4084 96.497 48.6164 97.615 48.3184 98.3C48.0314 98.96 45.7144 104.45 43.1694 110.5C40.6254 116.55 38.0764 122.738 37.5064 124.25C36.9364 125.762 36.1534 127 35.7664 127C35.3804 127 34.0734 124.96 32.8614 122.468C31.6504 119.975 29.9284 117.654 29.0344 117.311C28.1404 116.968 25.1904 117.256 22.4784 117.951C19.7664 118.646 17.3324 119 17.0694 118.738C16.8074 118.475 18.6474 113.364 21.1584 107.38C23.6704 101.396 26.6884 94.362 27.8664 91.75C29.2264 88.732 30.6394 87 31.7414 87C32.6954 87 35.4314 88.64 37.8204 90.645Z"
+            fill="black"
+          />
+        </svg>
+
+        <div>
+          <h4>
+            100% Qualität <br />
+            Dank weichem Silikon
+          </h4>
+        </div>
+      </div>
+      <div class="quality-item">
+        <svg
+          width="97"
+          height="132"
+          viewBox="0 0 97 132"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M40.6794 3.25C38.3224 5.038 35.3114 7.225 33.9874 8.112C32.6634 8.999 28.8884 10.005 25.5984 10.349C22.3074 10.693 18.3434 11.632 16.7884 12.436C15.2344 13.24 13.2764 14.945 12.4384 16.224C11.5994 17.504 10.5844 21.831 10.1814 25.839C9.52137 32.411 9.05837 33.58 5.47237 37.723C3.28437 40.251 1.06437 43.45 0.538369 44.833C0.0133688 46.216 -0.157631 48.53 0.159369 49.974C0.477369 51.419 2.71337 55.011 5.13037 57.957C9.17537 62.889 9.57937 63.901 10.2184 70.728C10.7574 76.474 11.4614 78.793 13.3494 81.037C14.8154 82.778 17.2564 84.225 19.4754 84.668C21.5054 85.074 23.5744 85.29 24.0734 85.15C24.5734 85.009 25.3194 85.44 25.7324 86.108C26.1444 86.775 26.0704 88.036 25.5674 88.911C25.0644 89.785 23.2664 93.875 21.5704 98C19.8744 102.125 17.1774 108.791 15.5764 112.814C13.9754 116.836 12.6654 120.774 12.6654 121.564C12.6654 122.354 13.3884 123 14.2714 123C15.1544 123 18.6294 122.287 21.9924 121.415C25.3564 120.544 28.2384 120.206 28.3974 120.665C28.5554 121.124 30.0564 123.891 31.7314 126.813C33.7184 130.278 35.3324 132.016 36.3754 131.813C37.2754 131.636 39.2534 128.448 40.9094 124.5C42.5244 120.65 44.7454 115.25 45.8434 112.5C46.9424 109.75 48.9264 105.124 50.2534 102.22C51.5804 99.317 52.6654 96.584 52.6654 96.147C52.6654 95.711 54.9764 93.474 57.8004 91.177C60.6244 88.88 63.7324 87 64.7064 87C65.9804 87 67.3634 89.181 69.6214 94.75C71.3494 99.013 73.8754 104.853 75.2354 107.73C76.5954 110.606 77.9924 114.385 78.3404 116.127C78.9614 119.228 78.9134 119.277 76.0694 118.466C74.4724 118.01 71.5904 117.606 69.6654 117.568C66.4834 117.506 65.9384 117.931 63.6654 122.247C62.2904 124.858 60.9134 126.996 60.6064 126.997C60.2984 126.999 58.5254 123.4 56.6654 119C54.8054 114.6 52.6944 111 51.9744 111C51.2544 111 50.6654 111.624 50.6654 112.388C50.6654 113.151 51.9484 116.638 53.5164 120.138C55.0844 123.637 56.8744 127.738 57.4944 129.25C58.1154 130.762 59.2984 132 60.1234 132C60.9494 132 62.9794 129.637 64.6354 126.75C66.2904 123.863 67.7754 121.124 67.9334 120.665C68.0924 120.206 70.9744 120.544 74.3384 121.415C77.7014 122.287 81.1764 123 82.0594 123C82.9424 123 83.6514 122.213 83.6344 121.25C83.6174 120.287 81.7964 115.225 79.5874 110C77.3784 104.775 74.6324 98.025 73.4854 95C72.3384 91.975 70.9874 88.978 70.4834 88.339C69.9024 87.601 70.0414 86.882 70.8664 86.364C71.5814 85.917 73.1954 85.409 74.4534 85.236C75.7124 85.063 77.8494 84.5 79.2034 83.986C80.5574 83.471 82.5094 81.661 83.5414 79.963C84.6004 78.222 85.7164 73.856 86.1014 69.95C86.7204 63.674 87.1914 62.547 91.1214 57.943C93.5074 55.148 95.6674 51.768 95.9234 50.431C96.1794 49.094 96.1794 46.906 95.9234 45.569C95.6674 44.232 93.5164 40.863 91.1434 38.082C87.2804 33.557 86.7534 32.316 86.1204 26.263C85.7324 22.543 84.7884 18.27 84.0224 16.767C83.2574 15.264 81.3814 13.387 79.8534 12.597C78.3254 11.807 73.8804 10.718 69.9744 10.177C63.7094 9.309 62.2094 8.652 57.2304 4.596C53.0564 1.196 50.7254 0 48.2764 0C46.0864 0 43.5144 1.101 40.6794 3.25ZM54.6514 6.25C57.0084 8.038 60.0434 10.24 61.3954 11.144C62.7484 12.048 66.8154 13.104 70.4344 13.492C74.0534 13.879 77.6274 14.432 78.3764 14.719C79.1264 15.007 80.3974 16.515 81.2024 18.072C82.0074 19.628 82.6654 22.962 82.6654 25.482C82.6654 28.002 83.2784 31.512 84.0274 33.282C84.7764 35.052 86.3974 37.399 87.6294 38.498C88.8624 39.596 90.4994 41.711 91.2674 43.198C92.0364 44.684 92.6654 47.098 92.6654 48.562C92.6654 50.199 91.1394 53.045 88.6974 55.962C86.5154 58.568 84.2654 61.922 83.6974 63.416C83.1294 64.909 82.6654 68.148 82.6654 70.615C82.6654 73.081 82.0074 76.372 81.2024 77.928C80.3974 79.485 78.9724 81.052 78.0354 81.412C77.0974 81.771 73.5934 82.334 70.2484 82.661C66.9024 82.988 62.7734 84.092 61.0724 85.113C59.3714 86.134 56.2714 88.326 54.1844 89.985C52.0974 91.643 49.4314 93 48.2584 93C47.0854 93 43.4354 90.968 40.1454 88.485C36.8564 86.002 33.2654 83.775 32.1654 83.538C31.0654 83.3 27.6904 82.831 24.6654 82.496C21.6404 82.161 18.4514 81.35 17.5784 80.693C16.7064 80.037 15.4684 78.517 14.8284 77.316C14.1894 76.114 13.6654 73.411 13.6654 71.309C13.6654 69.207 13.2414 66.008 12.7234 64.201C12.2044 62.394 9.95437 58.734 7.72337 56.069C4.68737 52.444 3.66537 50.347 3.66537 47.748C3.66537 45.472 4.46337 43.449 5.97637 41.886C7.24737 40.574 9.30537 38.034 10.5494 36.243C11.9994 34.155 12.9934 30.926 13.3194 27.243C13.5984 24.084 14.3024 20.245 14.8834 18.712C15.4644 17.178 16.6654 15.537 17.5524 15.065C18.4394 14.592 22.1604 13.887 25.8204 13.497C29.4814 13.106 33.5824 12.048 34.9354 11.144C36.2874 10.24 39.3224 8.038 41.6794 6.25C44.0374 4.462 46.9554 3 48.1654 3C49.3754 3 52.2934 4.462 54.6514 6.25ZM44.3604 17.7C43.3674 17.957 42.7274 18.693 42.9394 19.334C43.1584 19.998 46.3284 20.737 50.3034 21.05C54.9254 21.415 58.4464 22.323 60.7244 23.737C62.6174 24.913 65.8224 27.59 67.8474 29.687C69.8724 31.784 72.4604 35.879 73.5974 38.787C74.7344 41.695 75.6654 45.841 75.6654 48C75.6654 50.159 74.7134 54.469 73.5504 57.577C72.3044 60.908 69.7984 64.867 67.4494 67.216C65.2574 69.408 61.3714 72.134 58.8144 73.275C55.7184 74.655 52.1614 75.332 48.1654 75.3C44.7614 75.272 40.4344 74.498 38.1654 73.51C35.9654 72.551 32.4854 70.438 30.4334 68.814C28.1724 67.024 25.5114 63.367 23.6834 59.537C21.5524 55.072 20.6654 51.721 20.6654 48.136C20.6654 44.985 21.5534 41.048 23.0054 37.765C24.2934 34.855 26.7904 31.029 28.5554 29.264C30.3204 27.498 33.0924 25.27 34.7154 24.312C36.3374 23.353 37.6654 22.242 37.6654 21.843C37.6654 21.444 37.2954 20.89 36.8434 20.61C36.3914 20.331 34.7044 20.782 33.0934 21.612C31.4834 22.442 28.6434 24.557 26.7834 26.311C24.9234 28.065 22.1114 32.303 20.5334 35.728C18.3794 40.406 17.6654 43.46 17.6654 48C17.6654 52.51 18.3854 55.624 20.5044 60.272C22.2534 64.109 25.0974 68.106 27.9094 70.683C30.8154 73.346 34.3934 75.436 37.7524 76.433C40.6544 77.295 45.3704 78 48.2324 78C51.0944 78 55.7604 77.249 58.6004 76.332C61.4684 75.406 65.8204 72.855 68.3844 70.599C71.3864 67.956 73.9934 64.348 75.8344 60.289C77.9334 55.659 78.6654 52.494 78.6654 48.05C78.6654 43.801 77.9224 40.375 76.1134 36.279C74.7094 33.1 72.1224 28.998 70.3634 27.162C68.6044 25.327 65.3654 22.896 63.1654 21.76C60.9654 20.624 56.9154 19.094 54.1654 18.359C51.4154 17.625 48.4904 17.071 47.6654 17.128C46.8404 17.185 45.3534 17.443 44.3604 17.7ZM50.2254 42C45.7174 46.4 41.5814 50 41.0344 50C40.4874 50 38.7464 48.65 37.1654 47C35.5844 45.35 33.5454 44 32.6334 44C31.7214 44 30.2304 44.823 29.3204 45.829C28.4104 46.835 27.6654 48.761 27.6654 50.11C27.6654 51.771 29.5314 54.409 33.4444 58.281C37.2084 62.006 40.0504 64 41.5934 64C43.2634 64 47.1724 60.839 54.8144 53.308C63.3944 44.853 65.6654 42.04 65.6654 39.864C65.6654 38.155 64.8234 36.524 63.4424 35.557C62.2204 34.701 60.5904 34 59.8204 34C59.0504 34 54.7324 37.6 50.2254 42ZM62.6654 39.542C62.6654 40.39 58.1464 45.565 52.6234 51.042C47.1004 56.519 42.0534 61 41.4074 61C40.7624 61 38.0814 58.879 35.4494 56.288C32.8184 53.696 30.6654 50.771 30.6654 49.788C30.6654 48.728 31.4034 48 32.4784 48C33.4754 48 35.5844 49.35 37.1654 51C38.7464 52.65 40.7534 54 41.6264 54C42.4984 54 46.7914 50.4 51.1654 46C55.5394 41.6 59.9164 38 60.8924 38C61.8674 38 62.6654 38.694 62.6654 39.542ZM37.8204 90.645C40.2104 92.65 43.6674 94.922 45.5034 95.695C47.4084 96.497 48.6164 97.615 48.3184 98.3C48.0314 98.96 45.7144 104.45 43.1694 110.5C40.6254 116.55 38.0764 122.738 37.5064 124.25C36.9364 125.762 36.1534 127 35.7664 127C35.3804 127 34.0734 124.96 32.8614 122.468C31.6504 119.975 29.9284 117.654 29.0344 117.311C28.1404 116.968 25.1904 117.256 22.4784 117.951C19.7664 118.646 17.3324 119 17.0694 118.738C16.8074 118.475 18.6474 113.364 21.1584 107.38C23.6704 101.396 26.6884 94.362 27.8664 91.75C29.2264 88.732 30.6394 87 31.7414 87C32.6954 87 35.4314 88.64 37.8204 90.645Z"
+            fill="black"
+          />
+        </svg>
+
+        <div>
+          <h4>
+            100% Qualität <br />
+            Dank weichem Silikon
+          </h4>
+        </div>
+      </div>
+      <div class="quality-item">
+        <svg
+          width="97"
+          height="132"
+          viewBox="0 0 97 132"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M40.6794 3.25C38.3224 5.038 35.3114 7.225 33.9874 8.112C32.6634 8.999 28.8884 10.005 25.5984 10.349C22.3074 10.693 18.3434 11.632 16.7884 12.436C15.2344 13.24 13.2764 14.945 12.4384 16.224C11.5994 17.504 10.5844 21.831 10.1814 25.839C9.52137 32.411 9.05837 33.58 5.47237 37.723C3.28437 40.251 1.06437 43.45 0.538369 44.833C0.0133688 46.216 -0.157631 48.53 0.159369 49.974C0.477369 51.419 2.71337 55.011 5.13037 57.957C9.17537 62.889 9.57937 63.901 10.2184 70.728C10.7574 76.474 11.4614 78.793 13.3494 81.037C14.8154 82.778 17.2564 84.225 19.4754 84.668C21.5054 85.074 23.5744 85.29 24.0734 85.15C24.5734 85.009 25.3194 85.44 25.7324 86.108C26.1444 86.775 26.0704 88.036 25.5674 88.911C25.0644 89.785 23.2664 93.875 21.5704 98C19.8744 102.125 17.1774 108.791 15.5764 112.814C13.9754 116.836 12.6654 120.774 12.6654 121.564C12.6654 122.354 13.3884 123 14.2714 123C15.1544 123 18.6294 122.287 21.9924 121.415C25.3564 120.544 28.2384 120.206 28.3974 120.665C28.5554 121.124 30.0564 123.891 31.7314 126.813C33.7184 130.278 35.3324 132.016 36.3754 131.813C37.2754 131.636 39.2534 128.448 40.9094 124.5C42.5244 120.65 44.7454 115.25 45.8434 112.5C46.9424 109.75 48.9264 105.124 50.2534 102.22C51.5804 99.317 52.6654 96.584 52.6654 96.147C52.6654 95.711 54.9764 93.474 57.8004 91.177C60.6244 88.88 63.7324 87 64.7064 87C65.9804 87 67.3634 89.181 69.6214 94.75C71.3494 99.013 73.8754 104.853 75.2354 107.73C76.5954 110.606 77.9924 114.385 78.3404 116.127C78.9614 119.228 78.9134 119.277 76.0694 118.466C74.4724 118.01 71.5904 117.606 69.6654 117.568C66.4834 117.506 65.9384 117.931 63.6654 122.247C62.2904 124.858 60.9134 126.996 60.6064 126.997C60.2984 126.999 58.5254 123.4 56.6654 119C54.8054 114.6 52.6944 111 51.9744 111C51.2544 111 50.6654 111.624 50.6654 112.388C50.6654 113.151 51.9484 116.638 53.5164 120.138C55.0844 123.637 56.8744 127.738 57.4944 129.25C58.1154 130.762 59.2984 132 60.1234 132C60.9494 132 62.9794 129.637 64.6354 126.75C66.2904 123.863 67.7754 121.124 67.9334 120.665C68.0924 120.206 70.9744 120.544 74.3384 121.415C77.7014 122.287 81.1764 123 82.0594 123C82.9424 123 83.6514 122.213 83.6344 121.25C83.6174 120.287 81.7964 115.225 79.5874 110C77.3784 104.775 74.6324 98.025 73.4854 95C72.3384 91.975 70.9874 88.978 70.4834 88.339C69.9024 87.601 70.0414 86.882 70.8664 86.364C71.5814 85.917 73.1954 85.409 74.4534 85.236C75.7124 85.063 77.8494 84.5 79.2034 83.986C80.5574 83.471 82.5094 81.661 83.5414 79.963C84.6004 78.222 85.7164 73.856 86.1014 69.95C86.7204 63.674 87.1914 62.547 91.1214 57.943C93.5074 55.148 95.6674 51.768 95.9234 50.431C96.1794 49.094 96.1794 46.906 95.9234 45.569C95.6674 44.232 93.5164 40.863 91.1434 38.082C87.2804 33.557 86.7534 32.316 86.1204 26.263C85.7324 22.543 84.7884 18.27 84.0224 16.767C83.2574 15.264 81.3814 13.387 79.8534 12.597C78.3254 11.807 73.8804 10.718 69.9744 10.177C63.7094 9.309 62.2094 8.652 57.2304 4.596C53.0564 1.196 50.7254 0 48.2764 0C46.0864 0 43.5144 1.101 40.6794 3.25ZM54.6514 6.25C57.0084 8.038 60.0434 10.24 61.3954 11.144C62.7484 12.048 66.8154 13.104 70.4344 13.492C74.0534 13.879 77.6274 14.432 78.3764 14.719C79.1264 15.007 80.3974 16.515 81.2024 18.072C82.0074 19.628 82.6654 22.962 82.6654 25.482C82.6654 28.002 83.2784 31.512 84.0274 33.282C84.7764 35.052 86.3974 37.399 87.6294 38.498C88.8624 39.596 90.4994 41.711 91.2674 43.198C92.0364 44.684 92.6654 47.098 92.6654 48.562C92.6654 50.199 91.1394 53.045 88.6974 55.962C86.5154 58.568 84.2654 61.922 83.6974 63.416C83.1294 64.909 82.6654 68.148 82.6654 70.615C82.6654 73.081 82.0074 76.372 81.2024 77.928C80.3974 79.485 78.9724 81.052 78.0354 81.412C77.0974 81.771 73.5934 82.334 70.2484 82.661C66.9024 82.988 62.7734 84.092 61.0724 85.113C59.3714 86.134 56.2714 88.326 54.1844 89.985C52.0974 91.643 49.4314 93 48.2584 93C47.0854 93 43.4354 90.968 40.1454 88.485C36.8564 86.002 33.2654 83.775 32.1654 83.538C31.0654 83.3 27.6904 82.831 24.6654 82.496C21.6404 82.161 18.4514 81.35 17.5784 80.693C16.7064 80.037 15.4684 78.517 14.8284 77.316C14.1894 76.114 13.6654 73.411 13.6654 71.309C13.6654 69.207 13.2414 66.008 12.7234 64.201C12.2044 62.394 9.95437 58.734 7.72337 56.069C4.68737 52.444 3.66537 50.347 3.66537 47.748C3.66537 45.472 4.46337 43.449 5.97637 41.886C7.24737 40.574 9.30537 38.034 10.5494 36.243C11.9994 34.155 12.9934 30.926 13.3194 27.243C13.5984 24.084 14.3024 20.245 14.8834 18.712C15.4644 17.178 16.6654 15.537 17.5524 15.065C18.4394 14.592 22.1604 13.887 25.8204 13.497C29.4814 13.106 33.5824 12.048 34.9354 11.144C36.2874 10.24 39.3224 8.038 41.6794 6.25C44.0374 4.462 46.9554 3 48.1654 3C49.3754 3 52.2934 4.462 54.6514 6.25ZM44.3604 17.7C43.3674 17.957 42.7274 18.693 42.9394 19.334C43.1584 19.998 46.3284 20.737 50.3034 21.05C54.9254 21.415 58.4464 22.323 60.7244 23.737C62.6174 24.913 65.8224 27.59 67.8474 29.687C69.8724 31.784 72.4604 35.879 73.5974 38.787C74.7344 41.695 75.6654 45.841 75.6654 48C75.6654 50.159 74.7134 54.469 73.5504 57.577C72.3044 60.908 69.7984 64.867 67.4494 67.216C65.2574 69.408 61.3714 72.134 58.8144 73.275C55.7184 74.655 52.1614 75.332 48.1654 75.3C44.7614 75.272 40.4344 74.498 38.1654 73.51C35.9654 72.551 32.4854 70.438 30.4334 68.814C28.1724 67.024 25.5114 63.367 23.6834 59.537C21.5524 55.072 20.6654 51.721 20.6654 48.136C20.6654 44.985 21.5534 41.048 23.0054 37.765C24.2934 34.855 26.7904 31.029 28.5554 29.264C30.3204 27.498 33.0924 25.27 34.7154 24.312C36.3374 23.353 37.6654 22.242 37.6654 21.843C37.6654 21.444 37.2954 20.89 36.8434 20.61C36.3914 20.331 34.7044 20.782 33.0934 21.612C31.4834 22.442 28.6434 24.557 26.7834 26.311C24.9234 28.065 22.1114 32.303 20.5334 35.728C18.3794 40.406 17.6654 43.46 17.6654 48C17.6654 52.51 18.3854 55.624 20.5044 60.272C22.2534 64.109 25.0974 68.106 27.9094 70.683C30.8154 73.346 34.3934 75.436 37.7524 76.433C40.6544 77.295 45.3704 78 48.2324 78C51.0944 78 55.7604 77.249 58.6004 76.332C61.4684 75.406 65.8204 72.855 68.3844 70.599C71.3864 67.956 73.9934 64.348 75.8344 60.289C77.9334 55.659 78.6654 52.494 78.6654 48.05C78.6654 43.801 77.9224 40.375 76.1134 36.279C74.7094 33.1 72.1224 28.998 70.3634 27.162C68.6044 25.327 65.3654 22.896 63.1654 21.76C60.9654 20.624 56.9154 19.094 54.1654 18.359C51.4154 17.625 48.4904 17.071 47.6654 17.128C46.8404 17.185 45.3534 17.443 44.3604 17.7ZM50.2254 42C45.7174 46.4 41.5814 50 41.0344 50C40.4874 50 38.7464 48.65 37.1654 47C35.5844 45.35 33.5454 44 32.6334 44C31.7214 44 30.2304 44.823 29.3204 45.829C28.4104 46.835 27.6654 48.761 27.6654 50.11C27.6654 51.771 29.5314 54.409 33.4444 58.281C37.2084 62.006 40.0504 64 41.5934 64C43.2634 64 47.1724 60.839 54.8144 53.308C63.3944 44.853 65.6654 42.04 65.6654 39.864C65.6654 38.155 64.8234 36.524 63.4424 35.557C62.2204 34.701 60.5904 34 59.8204 34C59.0504 34 54.7324 37.6 50.2254 42ZM62.6654 39.542C62.6654 40.39 58.1464 45.565 52.6234 51.042C47.1004 56.519 42.0534 61 41.4074 61C40.7624 61 38.0814 58.879 35.4494 56.288C32.8184 53.696 30.6654 50.771 30.6654 49.788C30.6654 48.728 31.4034 48 32.4784 48C33.4754 48 35.5844 49.35 37.1654 51C38.7464 52.65 40.7534 54 41.6264 54C42.4984 54 46.7914 50.4 51.1654 46C55.5394 41.6 59.9164 38 60.8924 38C61.8674 38 62.6654 38.694 62.6654 39.542ZM37.8204 90.645C40.2104 92.65 43.6674 94.922 45.5034 95.695C47.4084 96.497 48.6164 97.615 48.3184 98.3C48.0314 98.96 45.7144 104.45 43.1694 110.5C40.6254 116.55 38.0764 122.738 37.5064 124.25C36.9364 125.762 36.1534 127 35.7664 127C35.3804 127 34.0734 124.96 32.8614 122.468C31.6504 119.975 29.9284 117.654 29.0344 117.311C28.1404 116.968 25.1904 117.256 22.4784 117.951C19.7664 118.646 17.3324 119 17.0694 118.738C16.8074 118.475 18.6474 113.364 21.1584 107.38C23.6704 101.396 26.6884 94.362 27.8664 91.75C29.2264 88.732 30.6394 87 31.7414 87C32.6954 87 35.4314 88.64 37.8204 90.645Z"
+            fill="black"
+          />
+        </svg>
+
+        <div>
+          <h4>
+            100% Qualität <br />
+            Dank weichem Silikon
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %} { "name": "t:sections.main-product.name", "tag": "section",
+"class": "section", "blocks": [ { "type": "@app" }, { "type": "text", "name":
+"t:sections.main-product.blocks.text.name", "settings": [ { "type": "text",
+"id": "text", "default": "Text block", "label":
+"t:sections.main-product.blocks.text.settings.text.label" }, { "type": "select",
+"id": "text_style", "options": [ { "value": "body", "label":
+"t:sections.main-product.blocks.text.settings.text_style.options__1.label" }, {
+"value": "subtitle", "label":
+"t:sections.main-product.blocks.text.settings.text_style.options__2.label" }, {
+"value": "uppercase", "label":
+"t:sections.main-product.blocks.text.settings.text_style.options__3.label" } ],
+"default": "body", "label":
+"t:sections.main-product.blocks.text.settings.text_style.label" } ] }, { "type":
+"title", "name": "t:sections.main-product.blocks.title.name", "limit": 1 }, {
+"type": "price", "name": "t:sections.main-product.blocks.price.name", "limit": 1
+}, { "type": "quantity_selector", "name":
+"t:sections.main-product.blocks.quantity_selector.name", "limit": 1 }, { "type":
+"variant_picker", "name": "t:sections.main-product.blocks.variant_picker.name",
+"limit": 1, "settings": [ { "type": "select", "id": "picker_type", "options": [
+{ "value": "dropdown", "label":
+"t:sections.main-product.blocks.variant_picker.settings.picker_type.options__1.label"
+}, { "value": "button", "label":
+"t:sections.main-product.blocks.variant_picker.settings.picker_type.options__2.label"
+} ], "default": "button", "label":
+"t:sections.main-product.blocks.variant_picker.settings.picker_type.label" } ]
+}, { "type": "buy_buttons", "name":
+"t:sections.main-product.blocks.buy_buttons.name", "limit": 1, "settings": [ {
+"type": "checkbox", "id": "show_dynamic_checkout", "default": true, "label":
+"t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.label",
+"info":
+"t:sections.main-product.blocks.buy_buttons.settings.show_dynamic_checkout.info"
+} ] }, { "type": "description", "name":
+"t:sections.main-product.blocks.description.name", "limit": 1 }, { "type":
+"share", "name": "t:sections.main-product.blocks.share.name", "limit": 1,
+"settings": [ { "type": "text", "id": "share_label", "label":
+"t:sections.main-product.blocks.share.settings.text.label", "default": "Share"
+}, { "type": "paragraph", "content":
+"t:sections.main-product.blocks.share.settings.featured_image_info.content" }, {
+"type": "paragraph", "content":
+"t:sections.main-product.blocks.share.settings.title_info.content" } ] }, {
+"type": "custom_liquid", "name":
+"t:sections.main-product.blocks.custom_liquid.name", "settings": [ { "type":
+"liquid", "id": "custom_liquid", "label":
+"t:sections.main-product.blocks.custom_liquid.settings.custom_liquid.label",
+"info":
+"t:sections.main-product.blocks.custom_liquid.settings.custom_liquid.info" } ]
+}, { "type": "collapsible_tab", "name":
+"t:sections.main-product.blocks.collapsible_tab.name", "settings": [ { "type":
+"text", "id": "heading", "default": "Collapsible row", "info":
+"t:sections.main-product.blocks.collapsible_tab.settings.heading.info", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.heading.label" }, {
+"type": "select", "id": "icon", "options": [ { "value": "none", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+}, { "value": "apple", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+}, { "value": "banana", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+}, { "value": "bottle", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+}, { "value": "box", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+}, { "value": "carrot", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+}, { "value": "chat_bubble", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+}, { "value": "check_mark", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+}, { "value": "clipboard", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+}, { "value": "dairy", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+}, { "value": "dairy_free", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+}, { "value": "dryer", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+}, { "value": "eye", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+}, { "value": "fire", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+}, { "value": "gluten_free", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+}, { "value": "heart", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+}, { "value": "iron", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+}, { "value": "leaf", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+}, { "value": "leather", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+}, { "value": "lightning_bolt", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+}, { "value": "lipstick", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+}, { "value": "lock", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+}, { "value": "map_pin", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+}, { "value": "nut_free", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+}, { "value": "pants", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+}, { "value": "paw_print", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+}, { "value": "pepper", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+}, { "value": "perfume", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+}, { "value": "plane", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+}, { "value": "plant", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+}, { "value": "price_tag", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+}, { "value": "question_mark", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+}, { "value": "recycle", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+}, { "value": "return", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+}, { "value": "ruler", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+}, { "value": "serving_dish", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+}, { "value": "shirt", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+}, { "value": "shoe", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+}, { "value": "silhouette", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+}, { "value": "snowflake", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+}, { "value": "star", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+}, { "value": "stopwatch", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+}, { "value": "truck", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+}, { "value": "washing", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+} ], "default": "check_mark", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.label" }, {
+"type": "richtext", "id": "content", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.content.label" }, {
+"type": "page", "id": "page", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.page.label" } ] }, {
+"type": "popup", "name": "t:sections.main-product.blocks.popup.name",
+"settings": [ { "type": "text", "id": "text", "default": "Pop-up link text",
+"label": "t:sections.main-product.blocks.popup.settings.link_label.label" }, {
+"id": "page", "type": "page", "label":
+"t:sections.main-product.blocks.popup.settings.page.label" } ] }, { "type":
+"rating", "name": "t:sections.main-product.blocks.rating.name", "limit": 1,
+"settings": [ { "type": "paragraph", "content":
+"t:sections.main-product.blocks.rating.settings.paragraph.content" } ] }, {
+"type": "complementary", "name":
+"t:sections.main-product.blocks.complementary_products.name", "limit": 1,
+"settings": [ { "type": "paragraph", "content":
+"t:sections.main-product.blocks.complementary_products.settings.paragraph.content"
+}, { "type": "text", "id": "block_heading", "default": "Pairs well with",
+"label":
+"t:sections.main-product.blocks.complementary_products.settings.heading.label"
+}, { "type": "checkbox", "id": "make_collapsible_row", "default": false,
+"label":
+"t:sections.main-product.blocks.complementary_products.settings.make_collapsible_row.label"
+}, { "type": "select", "id": "icon", "options": [ { "value": "none", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+}, { "value": "apple", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+}, { "value": "banana", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+}, { "value": "bottle", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+}, { "value": "box", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+}, { "value": "carrot", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+}, { "value": "chat_bubble", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+}, { "value": "check_mark", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+}, { "value": "clipboard", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+}, { "value": "dairy", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+}, { "value": "dairy_free", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+}, { "value": "dryer", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+}, { "value": "eye", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+}, { "value": "fire", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+}, { "value": "gluten_free", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+}, { "value": "heart", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+}, { "value": "iron", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+}, { "value": "leaf", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+}, { "value": "leather", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+}, { "value": "lightning_bolt", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+}, { "value": "lipstick", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+}, { "value": "lock", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+}, { "value": "map_pin", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+}, { "value": "nut_free", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+}, { "value": "pants", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+}, { "value": "paw_print", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+}, { "value": "pepper", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+}, { "value": "perfume", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+}, { "value": "plane", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+}, { "value": "plant", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+}, { "value": "price_tag", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+}, { "value": "question_mark", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+}, { "value": "recycle", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+}, { "value": "return", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+}, { "value": "ruler", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+}, { "value": "serving_dish", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+}, { "value": "shirt", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+}, { "value": "shoe", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+}, { "value": "silhouette", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+}, { "value": "snowflake", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+}, { "value": "star", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+}, { "value": "stopwatch", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+}, { "value": "truck", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+}, { "value": "washing", "label":
+"t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+} ], "default": "price_tag", "info":
+"t:sections.main-product.blocks.complementary_products.settings.icon.info",
+"label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.label" },
+{ "type": "range", "id": "product_list_limit", "min": 1, "max": 10, "step": 1,
+"default": 10, "label":
+"t:sections.main-product.blocks.complementary_products.settings.product_list_limit.label"
+}, { "type": "range", "id": "products_per_page", "min": 1, "max": 4, "step": 1,
+"default": 3, "label":
+"t:sections.main-product.blocks.complementary_products.settings.products_per_page.label"
+}, { "type": "select", "id": "pagination_style", "options": [ { "value": "dots",
+"label":
+"t:sections.main-product.blocks.complementary_products.settings.pagination_style.options.option_1"
+}, { "value": "counter", "label":
+"t:sections.main-product.blocks.complementary_products.settings.pagination_style.options.option_2"
+}, { "value": "numbers", "label":
+"t:sections.main-product.blocks.complementary_products.settings.pagination_style.options.option_3"
+} ], "label":
+"t:sections.main-product.blocks.complementary_products.settings.pagination_style.label",
+"default": "counter" }, { "type": "header", "content":
+"t:sections.main-product.blocks.complementary_products.settings.product_card.heading"
+}, { "type": "select", "id": "image_ratio", "options": [ { "value": "portrait",
+"label":
+"t:sections.main-product.blocks.complementary_products.settings.image_ratio.options.option_1"
+}, { "value": "square", "label":
+"t:sections.main-product.blocks.complementary_products.settings.image_ratio.options.option_2"
+} ], "label":
+"t:sections.main-product.blocks.complementary_products.settings.image_ratio.label",
+"default": "square" }, { "type": "checkbox", "id": "enable_quick_add", "label":
+"t:sections.main-product.blocks.complementary_products.settings.enable_quick_add.label",
+"default": false } ] } ], "settings": [ { "type": "checkbox", "id":
+"enable_sticky_info", "default": true, "label":
+"t:sections.main-product.settings.enable_sticky_info.label" }, { "type":
+"header", "content": "t:sections.main-product.settings.header.content", "info":
+"t:sections.main-product.settings.header.info" }, { "type": "select", "id":
+"media_position", "options": [ { "value": "left", "label":
+"t:sections.main-product.settings.media_position.options__1.label" }, { "value":
+"right", "label":
+"t:sections.main-product.settings.media_position.options__2.label" } ],
+"default": "left", "label":
+"t:sections.main-product.settings.media_position.label", "info":
+"t:sections.main-product.settings.media_position.info" }, { "type": "select",
+"id": "gallery_layout", "options": [ { "value": "stacked", "label":
+"t:sections.main-product.settings.gallery_layout.options__1.label" }, { "value":
+"columns", "label":
+"t:sections.main-product.settings.gallery_layout.options__2.label" }, { "value":
+"thumbnail", "label":
+"t:sections.main-product.settings.gallery_layout.options__3.label" }, { "value":
+"thumbnail_slider", "label":
+"t:sections.main-product.settings.gallery_layout.options__4.label" } ],
+"default": "stacked", "label":
+"t:sections.main-product.settings.gallery_layout.label" }, { "type": "select",
+"id": "media_size", "options": [ { "value": "small", "label":
+"t:sections.main-product.settings.media_size.options__1.label" }, { "value":
+"medium", "label":
+"t:sections.main-product.settings.media_size.options__2.label" }, { "value":
+"large", "label": "t:sections.main-product.settings.media_size.options__3.label"
+} ], "default": "large", "label":
+"t:sections.main-product.settings.media_size.label", "info":
+"t:sections.main-product.settings.media_size.info" }, { "type": "select", "id":
+"mobile_thumbnails", "options": [ { "value": "columns", "label":
+"t:sections.main-product.settings.mobile_thumbnails.options__1.label" }, {
+"value": "show", "label":
+"t:sections.main-product.settings.mobile_thumbnails.options__2.label" }, {
+"value": "hide", "label":
+"t:sections.main-product.settings.mobile_thumbnails.options__3.label" } ],
+"default": "hide", "label":
+"t:sections.main-product.settings.mobile_thumbnails.label" }, { "type":
+"checkbox", "id": "hide_variants", "default": false, "label":
+"t:sections.main-product.settings.hide_variants.label" }, { "type": "checkbox",
+"id": "enable_video_looping", "default": false, "label":
+"t:sections.main-product.settings.enable_video_looping.label" }, { "type":
+"header", "content": "t:sections.all.padding.section_padding_heading" }, {
+"type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit":
+"px", "label": "t:sections.all.padding.padding_top", "default": 36 }, { "type":
+"range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px",
+"label": "t:sections.all.padding.padding_bottom", "default": 36 } ] } {%
+endschema %}
