@@ -41,6 +41,17 @@
   />
   {%- endif -%}
 
+  <script>
+    const toggleVisible = async (id) => {
+      await Array.from(
+        document.getElementsByClassName("current-image")
+      ).forEach(function (element) {
+        element.style.zIndex = "0";
+      });
+      document.getElementById(`${id}`).style.zIndex = "10";
+    };
+  </script>
+
   <div class="container">
     <div class="product-container">
       <div class="item-gallery">
@@ -54,53 +65,40 @@
   {{ imagey }} -->
 
         <div class="thumbs">
-          {% for image in product.images %}
+          {% for image in product.images offset: 0 %}
           <img
-            onclick="toggleVisible('{{ image.id }}')"
+            onclick="toggleVisible('{{ forloop.index }}')"
             class="thumb"
-            src="{{ image.src | img_url: '100x100' }}"
+            src="{{ image.src | img_url: '112x112' }}"
             alt="{{ image.alt | escape }}"
           />
           {% endfor %}
-
-          <script>
-            var myVar = "{{ product.images }}";
-            const myArr = myVar.split(".jpg");
-            console.log(myArr);
-          </script>
         </div>
         <div class="current">
           {% for image in product.images %}
-
           <img
             class="current-image"
-            id="{{ image.id }}"
-            src="{{ image.src | img_url: '300x300' }}"
+            id="{{ forloop.index }}"
+            src="{{ image.src | img_url: '400x400' }}"
             alt="{{ image.alt | escape }}"
           />
           {% endfor %}
-          <script>
-            const toggleVisible = async (id) => {
-              await Array.from(
-                document.getElementsByClassName("current-image")
-              ).forEach(function (element) {
-                element.style.zIndex = "0";
-              });
-              document.getElementById(`${id}`).style.zIndex = "10";
-            };
-          </script>
+        </div>
+        <div class="img-ination">
+          <span class="prev">&#8249;</span>
+          <span class="next">&#8250;</span>
         </div>
       </div>
       <div class="add-item">
         <h3>{{ product.title }}</h3>
         <h5>{{ product.description }}</h5>
         <h4>
-          <span class="price"> 24.99€</span><span class="reduced">19.99€</span>
+          <span class="price">24.99€</span><span class="reduced">19.99€</span>
           <span class="mws">inkl. MwSt.</span>
         </h4>
         <div class="stock">
           <span class="stock-status"></span>
-          <h6>Auf Lager, in 2-3 Tagen bei dir</h6>
+          <span>Auf Lager, in 2-3 Tagen bei dir</span>
         </div>
         <button class="button">In den Einkaufswagen</button>
       </div>
