@@ -49,9 +49,8 @@
   
       <div class="item-gallery">
         <div class="thumbs">
-          {% for image in product.images %}
+          {% for image in product.images offset: 1 %}
           <img
-          onclick="currentSlide({{forloop.index}})"
             class="thumb demo"
             src="{{ image.src | img_url: '112x112' }}"
             alt="{{ image.alt | escape }}"
@@ -70,8 +69,8 @@
           {% endfor %}
         </div>
         <div class="img-ination">
-          <span class="prev" onclick="plusSlides(-1)">❮</span>
-          <span class="next" onclick="plusSlides(1)">❯</span>
+          <button class="prev" onclick="plusSlides(-1)">❮</button>
+          <button class="next" onclick="plusSlides(1)">❯</button>
         </div>
       </div>
 

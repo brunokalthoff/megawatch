@@ -13,8 +13,11 @@ function showSlides(n) {
   let i;
   let theslides = document.getElementsByClassName("slides");
   let dots = document.getElementsByClassName("demo");
-  if (n > theslides.length) { slideIndex = 1 }
-  if (n < 1) { slideIndex = theslides.length }
+  if (n > 1) {document.querySelector('.prev').disabled = false}
+  if (n < theslides.length - 1) {document.querySelector('.next').disabled = false}
+  if (n === theslides.length - 1) { document.querySelector('.next').disabled = true }
+  if (n === 1) { document.querySelector('.prev').disabled = true }
+
   for (i = 0; i < theslides.length; i++) {
     theslides[i].style.display = "none";
   }
@@ -22,7 +25,6 @@ function showSlides(n) {
     dots[i].className = dots[i].className.replace(" active", "");
   }
   theslides[slideIndex - 1].style.display = "block";
-  dots[slideIndex - 1].className += " active";
 }
 
 
@@ -125,3 +127,5 @@ const updateDot = () => {
   dots.forEach(dot => dot.style.background = "#e8e8e8")
   dots[currentIndex].style.background = "grey";
 }
+
+updateDot();
