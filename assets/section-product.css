@@ -107,14 +107,13 @@
   bottom: 0;
   transition: all 0.1s ease;
 }
-
-
 /* ---- */
 
 /* product details */
 
 .add-item {
-  font-family: 'Inter', 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Inter", "Montserrat", "Segoe UI", Tahoma, Geneva, Verdana,
+    sans-serif;
   width: 380px;
   border-radius: 0.4rem;
   padding: 1rem 2rem 0;
@@ -250,6 +249,10 @@
   .product-container {
     flex-direction: column;
     gap: 6rem;
+  }
+
+  .add-item {
+    width: 425px;
   }
 }
 
