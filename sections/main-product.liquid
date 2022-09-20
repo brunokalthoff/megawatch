@@ -3,17 +3,6 @@
   class="page-width section-{{ section.id }}-padding"
   data-section="{{ section.id }}"
 >
-  <!-- My imports -->
-  {{ "section-product.css" | asset_url | stylesheet_tag }}
-  <script
-    src="{{ 'product-image-slider.js' | asset_url }}"
-    defer="defer"
-  ></script>
-
-  {{ "splide.min.css" | asset_url | stylesheet_tag }}
-  <script src="{{ 'splide.min.js' | asset_url }}" defer="defer"></script>
-  <!-- ---------- -->
-
   {{ "section-main-product.css" | asset_url | stylesheet_tag }}
   {{ "component-accordion.css" | asset_url | stylesheet_tag }}
   {{ "component-price.css" | asset_url | stylesheet_tag }}
@@ -29,11 +18,21 @@
   screen and (min-width: 750px) { .section-{{ section.id }}-padding {
   padding-top: {{ section.settings.padding_top }}px; padding-bottom:
   {{ section.settings.padding_bottom }}px; } } {%- endstyle -%}
-
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+  <!-- imports -->
+  {{ "section-product.css" | asset_url | stylesheet_tag }}
+  <script
+    src="{{ 'product-image-slider.js' | asset_url }}"
+    defer="defer"
+  ></script>
+  {{ "splide.min.css" | asset_url | stylesheet_tag }}
+  <script src="{{ 'splide.min.js' | asset_url }}" defer="defer"></script>
+  <!-- ---------- -->
 
   <div class="container">
 
+    <!-- mobile slider -->
     <section class="splide" aria-label="Splide Basic HTML Example">
       <div class="splide__track">
         <ul class="splide__list">
@@ -49,9 +48,11 @@
         </ul>
       </div>
     </section>
+<!-- ---------- -->
 
     <div class="product-container">
 
+<!-- desktop gallery -->
       <div class="item-gallery">
         <div class="thumbs">
           {% for image in product.images %}
@@ -64,11 +65,13 @@
           {% endfor %}
         </div>
         <div class="current">
+          <img style="z-index: 0;" src="{{ product.featured_image | img_url: '340x340' }}" alt="{{ product.featured_image.alt }}">
+          
           {% for image in product.images %}
           <img
             class="slides"
             id="{{ forloop.index0 }}"
-            src="{{ image.src | img_url: '400x400' }}"
+            src="{{ image.src | img_url: '340x340' }}"
             alt="{{ image.alt | escape }}"
           />
           {% endfor %}
@@ -78,36 +81,40 @@
           <button class="next" onclick="plusSlides(1)">❯</button>
         </div>
       </div>
-      
+      <!-- ---------- -->
+
+      <!-- product infos -->
       <div class="add-item">
         <h2 class="product-title">{{ product.title }}</h3>
         <h4 class="product-description">{{ product.description }}</h4>
         <h4 class="prices">
-          <span class="price-original">24.99€</span><span class="price-reduced">19.99€</span>
+          <span class="price-original">{{ product.price | money_with_currency }}</span><span class="price-reduced">{{ product.compare_at_price | money_with_currency }}</span>
           <span class="price-mws">inkl. MwSt.</span>
         </h4>
         <div class="stock">
+  {% if product.available %}
           <span class="stock-status"></span>
-          <span>Auf Lager, in 2-3 Tagen bei dir</span>
+          <span> Auf Lager, in 2-3 Tagen bei dir</span>
         </div>
-        
-<form style="margin-bottom:20px" class="product-form" action="/cart/add" data-productid="{{ product.id }}"  method="post"> 
-  <input type="hidden" name="id" data-productid="{{ product.id }}" value="{{ product.variants[0].id }}" data-variant-title="{{ product.variants[0].title }}" />
-  <input type="submit" value="In den Einkaufswagen" class="button" />
-</form>
+        <form style="margin-bottom:20px" action="/cart/add" data-productid="{{ product.id }}"  method="post"> 
+          <input type="hidden" name="id" data-productid="{{ product.id }}" value="{{ product.variants[0].id }}" data-variant-title="{{ product.variants[0].title }}" />
+          <input type="submit" value="In den Einkaufswagen" class="button" />
+        </form>
+        {% endif %}
       </div>
     </div>
+<!-- ---------- -->
 
+<!-- quality seals -->
     <div class="quality-container">
       {% for index in (1..3) %}
       <div class="quality">
         <img src="https://cdn.shopify.com/s/files/1/0662/6371/1985/files/quality.png?v=1663424611" alt="Quality Image"/>
           <p><span>100% Qualität</span><br /><span>Dank weichem Silikon</span></p>
-       
       </div>
       {% endfor %}
-
       </div>
+<!-- ---------- -->
 
     </div>
 
