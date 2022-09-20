@@ -133,6 +133,7 @@
 .product-description {
   font-weight: 550;
   font-size: 16px;
+  color: rgba(0, 0, 0, 0.704);
 }
 
 .prices {
