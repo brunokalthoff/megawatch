@@ -181,15 +181,10 @@
   outline-offset: 3px;
 }
 .splide__pagination {
-  bottom: 0.5em;
-  left: 0;
-  padding: 0 1em;
-  position: absolute;
-  right: 0;
   z-index: 1;
 }
 .splide__pagination__page {
-  background: rgb(214, 214, 214);
+  background: #F8F8F8;
   border: 0;
   border-radius: 50%;
   display: inline-block;
@@ -202,7 +197,7 @@
   width: 8px;
 }
 .splide__pagination__page.is-active {
-  background: rgb(148, 148, 148);
+  background: #E5E5E5;
   transform: scale(1.1);
   z-index: 1;
 }

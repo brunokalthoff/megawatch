@@ -1,45 +1,41 @@
 document.addEventListener('DOMContentLoaded', function () {
     var splide = new Splide('.splide', {
         type: 'loop',
-        gap: ".5rem",
-        padding: "2rem",
+        gap: 7,
+        padding: {left: 13, right: 13},
+        focus: 'center',
+        width: '100vw',
+        drag: 'free',
+        snap: true,
         arrows: false,
         classes: {
             pagination: 'splide__pagination splide-pagination',
-            arrows: 'splide__arrows splide-arrows',
-            arrow: 'splide__arrow splide-arrow',
-            prev: 'splide__arrow--prev splide-prev',
-            next: 'splide__arrow--next splide-next',
         },
     });
     splide.mount();
 });
 
-let slideIndex = 0;
-showSlides();
 
-function plusSlides(n) {
-    slideIndex += n;
-    showSlides();
-}
-function newIndex(n) {
-    slideIndex = Number(n);
-    showSlides()
-}
+var galleryThumbs = new Swiper(".gallery-thumbs", {
+    direction: 'vertical',
+    slidesPerView: 4,
+});
 
-function showSlides() {
-    let i;
-    let slides = document.getElementsByClassName("slides");
-    if (slideIndex === 0) { document.querySelector('.prev').disabled = true }
-    if (slideIndex > 0) { document.querySelector('.prev').disabled = false }
-    if (slideIndex === slides.length - 1) { document.querySelector('.next').disabled = true }
-    if (slideIndex < slides.length - 1) { document.querySelector('.next').disabled = false }
-
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.visibility = "hidden";
-        
-
+var galleryMain = new Swiper(".gallery-main", {
+    // preventInteractionOnTransition: true,
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+    },
+    thumbs: {
+        swiper: galleryThumbs
     }
+});
 
-    slides[slideIndex].style.visibility = "visible";
-}
+galleryMain.on('slideChangeTransitionStart', function () {
+    galleryThumbs.slideTo(galleryMain.activeIndex);
+});
+
+galleryThumbs.on('transitionStart', function () {
+    galleryMain.slideTo(galleryThumbs.activeIndex);
+});
