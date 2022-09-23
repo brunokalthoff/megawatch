@@ -20,12 +20,10 @@ span {
   width: 100%;
   height: 100%;
   margin-bottom: 30px;
-  margin-top: 7px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 77px;
-  
 }
 
 .swiper-navigation {
@@ -335,6 +333,5 @@ span {
 
   .container {
     gap: 36px;
-    margin-top: 0;
   }
 }
